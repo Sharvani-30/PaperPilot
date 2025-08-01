@@ -87,15 +87,17 @@ def rag_chain(question):
 
 # Summarizer function for text files
 def summarizer(filepath):
+    print(f"Summarizing file: {filepath}")
     input_text = file_preprocessing(filepath)
     prompt = f"Summarize the following text:\n\n{input_text}\n\nSummary:"
     try:
+        print(1)
         response = ollama.generate(
             model="llama3",
             prompt=prompt,
             options={"max_tokens": 500, "temperature": 0.5}
         )
-
+        print(2)
         # Since the response is a dictionary, directly access the 'response' key
         summary = response.get("response", "").strip()
         return summary
@@ -172,7 +174,7 @@ def load_dataset_and_process(file_path):
         print("Documents loaded successfully")
         
         print("Splitting documents...")
-        docs_processed = split_documents(512, docs)
+        docs_processed = split_documents(400, docs)
         print(f"Number of processed documents: {len(docs_processed)}")
         
         print("Creating vectorstore...")
@@ -214,6 +216,7 @@ def upload_file():
         file.save(file_path)
 
         print(f"File saved to: {file_path}")
+        print("Starting file processing...")
         # Generate summary
         summary = summarizer(file_path)
         
